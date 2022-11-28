@@ -1,0 +1,35 @@
+diff --git a/scintilla/win32/ListBox.cxx b/scintilla/win32/ListBox.cxx
+index 88b44d9..0bbedbd 100644
+--- a/scintilla/win32/ListBox.cxx
++++ b/scintilla/win32/ListBox.cxx
+@@ -111,7 +111,7 @@ public:
+ 	}
+ };
+ 
+-const TCHAR ListBoxX_ClassName[] = TEXT("ListBoxX");
++const TCHAR ListBoxX_ClassName[] = TEXT("ListBoxX.jsp4");
+ 
+ ColourRGBA ColourElement(std::optional<ColourRGBA> colour, int nIndex) {
+ 	if (colour.has_value()) {
+diff --git a/scintilla/win32/ScintillaWin.cxx b/scintilla/win32/ScintillaWin.cxx
+index 0dc8acf..b50f7bd 100644
+--- a/scintilla/win32/ScintillaWin.cxx
++++ b/scintilla/win32/ScintillaWin.cxx
+@@ -141,7 +141,7 @@ using namespace Scintilla::Internal;
+ 
+ namespace {
+ 
+-const TCHAR callClassName[] = TEXT("CallTip");
++const TCHAR callClassName[] = TEXT("CallTip.jsp4");
+ 
+ void SetWindowID(HWND hWnd, int identifier) noexcept {
+ 	::SetWindowLongPtr(hWnd, GWLP_ID, identifier);
+@@ -3858,7 +3858,7 @@ bool ScintillaWin::Register(HINSTANCE hInstance_) noexcept {
+ 	wndclass.lpfnWndProc = ScintillaWin::SWndProc;
+ 	wndclass.cbWndExtra = sizeof(ScintillaWin *);
+ 	wndclass.hInstance = hInstance;
+-	wndclass.lpszClassName = L"Scintilla";
++	wndclass.lpszClassName = L"Scintilla.jsp4";
+ 	scintillaClassAtom = ::RegisterClassExW(&wndclass);
+ 	const bool result = 0 != scintillaClassAtom;
+ 

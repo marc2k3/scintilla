@@ -1,0 +1,26 @@
+name: GenerateScintillaImpl
+on:
+  push:
+    paths:
+      - '.github/workflows/GenerateScintillaImpl.yml'
+      - 'scintilla/include/Scintilla.iface'
+      - 'jsp4/ScintillaImpl.mjs'
+      - 'jsp4/ScintillaImpl.template.hpp'
+
+jobs:
+  GenerateScintillaImpl:
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: GenerateScintillaImpl
+      working-directory: jsp4
+      run: |
+        node ScintillaImpl.mjs
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ScintillaImpl
+        path: jsp4/ScintillaImpl.hpp

@@ -167,8 +167,11 @@
     <ClCompile Include="..\src\ViewStyle.cxx" />
     <ClCompile Include="..\src\XPM.cxx" />
     <ClCompile Include="HanjaDic.cxx" />
+    <ClCompile Include="ListBox.cxx" />
     <ClCompile Include="PlatWin.cxx" />
     <ClCompile Include="ScintillaWin.cxx" />
+    <ClCompile Include="SurfaceD2D.cxx" />
+    <ClCompile Include="SurfaceGDI.cxx" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\ILexer.h" />
@@ -217,8 +220,11 @@
     <ClInclude Include="..\src\ViewStyle.h" />
     <ClInclude Include="..\src\XPM.h" />
     <ClInclude Include="HanjaDic.h" />
+    <ClInclude Include="ListBox.h" />
     <ClInclude Include="PlatWin.h" />
     <ClInclude Include="ScintillaWin.h" />
+    <ClInclude Include="SurfaceD2D.h" />
+    <ClInclude Include="SurfaceGDI.h" />
     <ClInclude Include="WinTypes.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -67,6 +67,7 @@ using Microsoft::WRL::ComPtr;
 #include "Geometry.h"
 #include "Platform.h"
 
+#include "CharacterType.h"
 #include "CharacterCategoryMap.h"
 #include "Position.h"
 #include "UniqueString.h"
@@ -1604,6 +1605,11 @@ Message SciMessageFromEM(unsigned int iMessage) noexcept {
 	return static_cast<Message>(iMessage);
 }
 
+constexpr bool IsVisualCharacter(wchar_t charCode) noexcept {
+	constexpr wchar_t lastAscii = INT8_MAX;
+	return (charCode > lastAscii) || !IsControl(charCode);
+}
+
 }
 
 namespace Scintilla::Internal {
@@ -1963,20 +1969,19 @@ sptr_t ScintillaWin::KeyMessage(unsigned int iMessage, uptr_t wParam, sptr_t lPa
 
 	case WM_CHAR:
 		HideCursorIfPreferred();
-		if (((wParam >= 128) || !iscntrl(static_cast<int>(wParam))) || !lastKeyDownConsumed) {
-			wchar_t wcs[3] = { static_cast<wchar_t>(wParam), 0 };
-			unsigned int wclen = 1;
-			if (IS_HIGH_SURROGATE(wcs[0])) {
+		if (const wchar_t charCode = static_cast<wchar_t>(wParam);
+			IsVisualCharacter(charCode) || !lastKeyDownConsumed) {
+			if (IS_HIGH_SURROGATE(charCode)) {
 				// If this is a high surrogate character, we need a second one
-				lastHighSurrogateChar = wcs[0];
-				return 0;
-			} else if (IS_LOW_SURROGATE(wcs[0])) {
-				wcs[1] = wcs[0];
-				wcs[0] = lastHighSurrogateChar;
+				lastHighSurrogateChar = charCode;
+			} else {
+				std::wstring wcs({ charCode });
+				if (IS_LOW_SURROGATE(charCode)) {
+					wcs.insert(wcs.begin(), lastHighSurrogateChar);
+				}
+				AddWString(wcs, CharacterSource::DirectInput);
 				lastHighSurrogateChar = 0;
-				wclen = 2;
 			}
-			AddWString(std::wstring_view(wcs, wclen), CharacterSource::DirectInput);
 		}
 		return 0;
 
@@ -2617,7 +2622,7 @@ void ScintillaWin::UpdateBaseElements() {
 	};
 	bool changed = false;
 	for (const ElementToIndex &ei : eti) {
-		changed = vs.SetElementBase(ei.element, ColourRGBA::FromRGB(static_cast<int>(::GetSysColor(ei.nIndex)))) || changed;
+		changed = vs.SetElementBase(ei.element, ColourFromSys(ei.nIndex)) || changed;
 	}
 	if (changed) {
 		Redraw();
@@ -2669,7 +2674,7 @@ int ScintillaWin::SetScrollInfo(int nBar, LPCSCROLLINFO lpsi, BOOL bRedraw) noex
 }
 
 bool ScintillaWin::GetScrollInfo(int nBar, LPSCROLLINFO lpsi) noexcept {
-	return ::GetScrollInfo(MainHWND(), nBar, lpsi) ? true : false;
+	return ::GetScrollInfo(MainHWND(), nBar, lpsi);
 }
 
 // Change the scroll position but avoid repaint if changing to same value
@@ -3338,7 +3343,7 @@ void ScintillaWin::ImeStartComposition() {
 			// The logfont for the IME is recreated here.
 			const int styleHere = pdoc->StyleIndexAt(sel.MainCaret());
 			LOGFONTW lf = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, L""};
-			int sizeZoomed = vs.styles[styleHere].size + vs.zoomLevel * FontSizeMultiplier;
+			int sizeZoomed = vs.styles[styleHere].size + (vs.zoomLevel * FontSizeMultiplier);
 			if (sizeZoomed <= 2 * FontSizeMultiplier)	// Hangs if sizeZoomed <= 1
 				sizeZoomed = 2 * FontSizeMultiplier;
 			// The negative is to allow for leading
@@ -3883,13 +3888,9 @@ bool ScintillaWin::Unregister() noexcept {
 }
 
 bool ScintillaWin::HasCaretSizeChanged() const noexcept {
-	if (
-		( (0 != vs.caret.width) && (sysCaretWidth != vs.caret.width) )
-		|| ((0 != vs.lineHeight) && (sysCaretHeight != vs.lineHeight))
-		) {
-		return true;
-	}
-	return false;
+	return
+		((0 != vs.caret.width) && (sysCaretWidth != vs.caret.width))
+		|| ((0 != vs.lineHeight) && (sysCaretHeight != vs.lineHeight));
 }
 
 BOOL ScintillaWin::CreateSystemCaret() {

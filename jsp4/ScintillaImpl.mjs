@@ -136,5 +136,7 @@ import { readFile, writeFile } from 'fs/promises'
 const options = 'utf8'
 const input = await readFile(filenames.input, options)
 const template = await readFile(filenames.template, options)
-await writeFile(filenames.output, template.replace('REPLACEME', create_body(input)), options)
+const body = create_body(input)
+const output = template.replace('REPLACEME', body)
+await writeFile(filenames.output, output, options)
 console.log('Done!')

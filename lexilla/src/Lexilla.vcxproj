@@ -131,6 +131,7 @@
     <ClCompile Include="Lexilla.cxx" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\include\Lexilla.h" />
     <ClInclude Include="..\include\SciLexer.h" />
     <ClInclude Include="..\lexlib\Accessor.h" />
     <ClInclude Include="..\lexlib\CatalogueModules.h" />

@@ -4,8 +4,8 @@ on:
     paths:
       - '.github/workflows/GenerateScintillaImpl.yml'
       - 'scintilla/include/Scintilla.iface'
-      - 'jsp4/ScintillaImpl.mjs'
-      - 'jsp4/ScintillaImpl.template.hpp'
+      - 'jsp/ScintillaImpl.mjs'
+      - 'jsp/ScintillaImpl.template.hpp'
 
 jobs:
   GenerateScintillaImpl:
@@ -15,7 +15,7 @@ jobs:
     - uses: actions/checkout@v6
 
     - name: GenerateScintillaImpl
-      working-directory: jsp4
+      working-directory: jsp
       run: |
         node ScintillaImpl.mjs
 
@@ -23,4 +23,4 @@ jobs:
       uses: actions/upload-artifact@v6
       with:
         name: ScintillaImpl
-        path: jsp4/ScintillaImpl.hpp
+        path: jsp/ScintillaImpl.hpp

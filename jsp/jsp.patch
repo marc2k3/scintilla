@@ -7,7 +7,7 @@ index 0548ea5..247328e 100644
  };
  
 -const TCHAR *ListBoxX_ClassName = TEXT("ListBoxX");
-+const TCHAR *ListBoxX_ClassName = TEXT("ListBoxX.jsp4");
++const TCHAR *ListBoxX_ClassName = TEXT("ListBoxX.JavaScript.Panel");
  
  ColourRGBA ColourElement(std::optional<ColourRGBA> colour, int nIndex) {
  	if (colour.has_value()) {
@@ -20,7 +20,7 @@ index fbec35f..9ed565c 100644
  namespace {
  
 -const TCHAR callClassName[] = TEXT("CallTip");
-+const TCHAR callClassName[] = TEXT("CallTip.jsp4");
++const TCHAR callClassName[] = TEXT("CallTip.JavaScript.Panel");
  
  void SetWindowID(HWND hWnd, int identifier) noexcept {
  	::SetWindowLongPtr(hWnd, GWLP_ID, identifier);
@@ -29,7 +29,7 @@ index fbec35f..9ed565c 100644
  	wndclass.cbWndExtra = sizeof(ScintillaWin *);
  	wndclass.hInstance = hInstance;
 -	wndclass.lpszClassName = L"Scintilla";
-+	wndclass.lpszClassName = L"Scintilla.jsp4";
++	wndclass.lpszClassName = L"Scintilla.JavaScript.Panel";
  	scintillaClassAtom = ::RegisterClassExW(&wndclass);
  	const bool result = 0 != scintillaClassAtom;
  
